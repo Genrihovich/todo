@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+import TodoList from "./components/TodoList";
+import AppHeader from "./components/AppHeader";
+import SearchPanel from "./components/SearchPanel";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    const todoData = [
+        {
+            label: 'Вивчання React',
+            important: false
+        },
+        {
+            label: 'Написання React App',
+            important: true
+        },
+        {
+            label: 'Перерва',
+            important: false
+        }
+    ]
+    return (
+        <div>
+            <AppHeader/>
+            <SearchPanel/>
+            <TodoList todos={todoData}/>
+        </div>
+    )
+};
 
 export default App;
