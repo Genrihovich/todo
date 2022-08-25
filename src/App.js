@@ -8,15 +8,18 @@ function App() {
     const todoData = [
         {
             label: 'Вивчання React',
-            important: false
+            important: false,
+            id: 0
         },
         {
             label: 'Написання React App',
-            important: true
+            important: true,
+            id: 1
         },
         {
             label: 'Перерва',
-            important: false
+            important: false,
+            id: 2
         }
     ]
     return (
