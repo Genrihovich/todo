@@ -15,7 +15,7 @@ export default class ItemAddForm extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         this.props.onItemAdd(this.state.label);
-        //       this.setState({ label: '' });
+        this.setState({ label: '' });
     }
     render() {
         return (
@@ -27,6 +27,7 @@ export default class ItemAddForm extends Component {
                     className="form-control"
                     placeholder='Новий Todo ...'
                     onChange={this.onLabelChange}
+                    value={this.state.label}
                 />
                 <div className="input-group-append">
                     <button
