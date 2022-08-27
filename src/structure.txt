@@ -1,7 +1,7 @@
-    <App/>
-        <AppHeader/>
+    <App/>                          <- TodoData <- done, important
+        <AppHeader/>                <- TotalTodo, TodoDone
         <SearchPanel/>
         <ItemStatusFilter/>
         <TodoList/>
-            <TodoListItem/>
+            <TodoListItem/>         
         <ItemAddForm/>
