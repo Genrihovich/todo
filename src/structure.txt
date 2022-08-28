@@ -5,3 +5,130 @@
         <TodoList/>
             <TodoListItem/>         
         <ItemAddForm/>
+
+Реализация панель поиска:
+1. В App.js добавляем эл-нт в STATE
+    term: '',
+2. Вынимаем term из state<нам нужны видимые части эл-нта
+render() {
+        const { todoData, term } = this.state;
+        const visibleItems = this.search(todoData, term);
+3. пишем ф-цию search():
+    принимает массив эл-тов и тот текст который мы пытаемся найти
+
+   search(items, text) {
+        if (text.length === 0) {
+            return items;
+        }
+        return items.filter((item) => {
+            return item.label.toLowerCase().indexOf(text.toLowerCase()) > -1
+        });
+    };
+4. Передаем в Todo не весь массив эл-тов, а те которые сейчас видимы:
+
+ <TodoList todos={visibleItems}
+
+ 5. В SearchPanel.jsx рефакторим под класс и создаем состояние для term
+ state = {
+        term: ''
+    }
+6. Что бы сделать эл-нт input контролиоуемым мы назначим value 
+из нашего стейта и чтоб эл-нт передавал в App каждое нажатие кнопки
+мы добавим слушатель
+            <input
+                value={this.state.term}
+                onChange={this.onSearchChange}
+7. Пишем тело ф-ции:
+нужна ф-ция стрелка так как мы передаем ивент лисенер и нам нужно
+заботится об this
+
+    onSearchChange = (e) => {
+        const term = e.target.value;
+
+        this.setState({ term });
+        this.props.onSearchChange(term); //вызов ф-ции которую нам передаст App
+    };
+На каждое нажатие кнопки мы будем вызывать onSearchChange
+
+8. В App добавим этот ивентлисенер:
+<SearchPanel onSearchChange={this.onSearchChange} />
+                   
+9. пишем ф-цию onSearchChange в App:
+
+onSearchChange = (term) => {
+        this.setState({ term })
+    };
+=================================================================
+Реализация фильтрации
+
+1. В App.js добавляем эл-нт в STATE
+namefilter: 'all' // all, active, done
+2. Создаем ф-цию myFilter()
+
+   myFilter(items, namefilter) {
+        switch (namefilter) {
+            case 'all':
+                return items;
+            case 'active':
+                return items.filter((item) => !item.done);
+            case 'done':
+                return items.filter((item) => item.done);
+            default:
+                return items;
+        }
+    };
+3.Добавляем фильтрацию к массиву,  но перед тем достанем значение
+namefilter из стейта
+
+const { todoData, term, namefilter } = this.state;
+
+const visibleItems = this.myFilter(
+    this.search(todoData, term), namefilter);
+
+4. ItemStatusFilter.jsx 
+Выносим названия кнопок и фильтров в отдельный массив
+    buttons = [
+        { name: 'all', label: 'Всі' },
+        { name: 'active', label: 'Активні' },
+        { name: 'done', label: 'Завершені' },
+    ];
+5. Отрисовываем кнопку
+       const { filter, onFilterChange } = this.props;
+
+        const buttons = this.buttons.map(({ name, label }) => {
+    //кнопка будет считаться активной, если имя фильтра кнопки
+    //совпадает с передаваемым           
+            const isActive = filter === name; 
+             const clazz = isActive
+                ? "btn btn-outline-info active"
+                : "btn btn-outline-info"
+
+6. Помещаем внутрь дива {buttons}
+        return (
+            <div className="btn-group">
+                {buttons}
+            </div>
+        )
+7. В App передаем в компонент имя текущего фильтра
+                 <ItemStatusFilter
+                        filter={namefilter}
+                        onFilterChange={this.onFilterChange}
+                    />
+8. Добавляем ивентлисенер нашим кнопкам и сообщать компоненту 
+App каждый раз, когда юзер нажал новую кнопку
+                        onFilterChange={this.onFilterChange}
+9. Реализовываем ф-цию onFilterChange
+
+ onFilterChange = (namefilter) => {
+        this.setState({ namefilter })
+    };
+
+10. когда мы кликаем на кнопку то вызываем ф-цию onFilterChange(name)
+и пережаем в нее текущее название фильтра
+  return (<button
+                type="button"
+                className={clazz}
+                key={name}
+                onClick={() => onFilterChange(name)}
+            >{label}
+            </button>)
